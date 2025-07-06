@@ -163,12 +163,17 @@ void I_InitGraphics (void)
     int i;
 
     /* Open fbdev file descriptor */
-    fd_fb = open("/dev/fb0", O_RDWR);
+   fd_fb = open("/dev/fb0", O_RDWR);
+   if (fd_fb < 0)
+   {
+    fd_fb = open("/dev/graphics/fb0", O_RDWR);
     if (fd_fb < 0)
     {
-        printf("Could not open /dev/fb0");
+        perror("Could not open /dev/fb0 or /dev/graphics/fb0");
         exit(-1);
     }
+}
+
 
     /* fetch framebuffer info */
     ioctl(fd_fb, FBIOGET_VSCREENINFO, &fb);
